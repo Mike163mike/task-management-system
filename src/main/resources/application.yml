@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgresql_17_db:5432/task_management_system_db
+    username: postgres
+    password: 123
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      format_sql: true
+      highlight_sql: true
+
+  flyway:
+    locations: classpath:db/migration
+
+  application:
+    name: Task management system
+
+app:
+  name: Task management system
+  description: An application for managing tasks. You can assign performers and leave comments on tasks.
+  version: v.1.0.0
+  email: task-management-system@gmail.com
