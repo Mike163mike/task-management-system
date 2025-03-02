@@ -7,6 +7,7 @@ import com.effectivemobile.taskmanagementsystem.entity.task.PriorityEnum;
 import com.effectivemobile.taskmanagementsystem.entity.task.StatusEnum;
 import com.effectivemobile.taskmanagementsystem.entity.task.Task;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TaskMapper {
@@ -21,6 +22,10 @@ public interface TaskMapper {
     @Mapping(target = "creator", source = "creator.username")
     @Mapping(target = "assignee", source = "assignee.username")
     TaskResponseDto toResponseDto(Task task);
+
+    default Page<TaskResponseDto> toPageResponseDto(Page<Task> tasks) {
+        return tasks.map(this::toResponseDto);
+    }
 
     @Named("mapStatus")
     static StatusEnum mapStatus(String status) {

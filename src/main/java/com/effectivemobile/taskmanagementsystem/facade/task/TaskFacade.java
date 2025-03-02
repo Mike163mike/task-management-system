@@ -1,14 +1,19 @@
 package com.effectivemobile.taskmanagementsystem.facade.task;
 
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskCreateDto;
+import com.effectivemobile.taskmanagementsystem.dto.task.TaskFilterDto;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskUpdateDto;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TaskFacade {
-    ResponseEntity<TaskResponseDto> createTask(TaskCreateDto taskCreateDto);
 
-    ResponseEntity<TaskResponseDto> updateTask(Long taskId, TaskUpdateDto taskUpdateDto);
+    TaskResponseDto createTask(TaskCreateDto taskCreateDto);
 
-    ResponseEntity<Void> deleteTask(Long taskId);
+    TaskResponseDto updateTask(Long taskId, TaskUpdateDto taskUpdateDto);
+
+    void deleteTask(Long taskId);
+
+    Page<TaskResponseDto> getAllTasksByActor(TaskFilterDto taskFilterDto, Pageable pageable);
 }

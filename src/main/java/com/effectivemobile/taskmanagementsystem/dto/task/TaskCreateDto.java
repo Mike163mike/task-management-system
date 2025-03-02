@@ -16,11 +16,11 @@ public class TaskCreateDto {
 
     @NotBlank
     @Size(max = 255)
-    @Schema(description = "The task title should be less than 255 characters", maxLength = 255)
+    @Schema(description = "The task title should be less than 255 characters", maxLength = 255, example = "My first task")
     private String title;
 
     @Size(max = 524_288)
     @Schema(description = "The task description should be less than 524 288 characters in length. It can be empty",
-            maxLength = 524_288)
+            maxLength = 524_288, example = "I need to do something or what...?")
     private String description;
 }

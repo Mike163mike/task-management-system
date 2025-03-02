@@ -3,9 +3,9 @@ create table users
     id          bigserial primary key,
     create_date timestamp,
     change_date timestamp,
-    username    varchar(255) not null unique,
+    username    varchar(150) not null unique,
     password    varchar(255) not null,
-    email       varchar(255) not null unique
+    email       varchar(254) not null unique
 );
 
 create table roles
@@ -48,6 +48,6 @@ create table comments
     text        text   not null,
     task_id     bigint not null,
     user_id     bigint not null,
-    constraint fk_comment_task foreign key (task_id) references task (id) on delete cascade,
+    constraint fk_comment_task foreign key (task_id) references tasks (id) on delete cascade,
     constraint fk_comment_user foreign key (user_id) references users (id) on delete cascade
 );

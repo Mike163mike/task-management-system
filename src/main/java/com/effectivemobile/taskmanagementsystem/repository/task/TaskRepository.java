@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @EntityGraph(attributePaths = {"comments", "creator", "assignee"})
-    Page<Task>  findAllByAssignee(Pageable pageable, String assignee);
+    Page<Task> findAllByAssigneeUsernameOrderByCreateDateDesc(String assigneeUsername, Pageable pageable);
 
     @EntityGraph(attributePaths = {"comments", "creator", "assignee"})
-    Page<Task> findAllByCreator(Pageable pageable, String creator);
+    Page<Task> findAllByCreatorUsernameOrderByCreateDateDesc(String creatorUsername, Pageable pageable);
 }

@@ -38,10 +38,10 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false, unique = true)
-    private String password;
+        private String password;
 
     @Column(name = "email", nullable = false, unique = true)
-    private String email;
+        private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
