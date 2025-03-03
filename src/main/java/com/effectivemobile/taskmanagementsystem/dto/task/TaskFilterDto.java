@@ -21,15 +21,6 @@ public class TaskFilterDto {
     @Schema(description = "The username of the creator. Only one from two! Remember?", example = "Rick_Sanchez")
     private String creatorUsername;
 
-//    @Min(0)
-//    @Schema(description = "Page number (0-based)", example = "0")
-//    private Integer page = 0;
-//
-//    @Min(1)
-//    @Max(100)
-//    @Schema(description = "Page size", example = "10")
-//    private Integer size = 10;
-
     @AssertTrue(message = "Exactly one of assigneeUsername or creatorUsername must be provided")
     public boolean isValid() {
         return (assigneeUsername == null) ^ (creatorUsername == null);  // Либо одно поле null, либо другое

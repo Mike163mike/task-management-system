@@ -8,7 +8,6 @@ import com.effectivemobile.taskmanagementsystem.repository.task.TaskRepository;
 import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
 import com.effectivemobile.taskmanagementsystem.service.task.TaskService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -36,10 +34,6 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
                         this.getClass(), "updateTask"));
 
-        log.info("Old Task before:===============> {}", oldTask);
-        log.info("1th user: ==================>{}", userRepository.findById(1));
-
-
         if (updatedTask.getTitle() != null) {
             oldTask.setTitle(updatedTask.getTitle());
         }
@@ -55,9 +49,6 @@ public class TaskServiceImpl implements TaskService {
         if (updatedTask.getAssignee() != null) {
             oldTask.setAssignee(updatedTask.getAssignee());
         }
-
-        log.info("Old Task after:===============> {}", oldTask);
-
 
         return taskRepository.save(oldTask);
     }

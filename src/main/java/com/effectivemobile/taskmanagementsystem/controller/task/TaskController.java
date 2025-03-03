@@ -12,6 +12,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static com.effectivemobile.taskmanagementsystem.constant.AppConstant.APP_PREFIX;
@@ -20,6 +21,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequestMapping(APP_PREFIX + "/task")
 @AllArgsConstructor
+@Validated
 //@SecurityRequirement(name = CoreConstants.Security.AUTHORIZATION)
 public class TaskController {
 
@@ -48,10 +50,8 @@ public class TaskController {
                     20 items per page.
                     """
     )
-    public ResponseEntity<Page<TaskResponseDto>> getAllTasksByActor(@RequestParam(required = false) String assigneeUsername,
-                                                                    @RequestParam(required = false) String creatorUsername,
+    public ResponseEntity<Page<TaskResponseDto>> getAllTasksByActor(@Valid @ModelAttribute TaskFilterDto taskFilterDto,
                                                                     @ParameterObject Pageable pageable) {
-        TaskFilterDto taskFilterDto = new TaskFilterDto(assigneeUsername, creatorUsername);
         return ResponseEntity.ok(taskFacade.getAllTasksByActor(taskFilterDto, pageable));
     }
 

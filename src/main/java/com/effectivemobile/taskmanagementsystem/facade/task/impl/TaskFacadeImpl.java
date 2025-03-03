@@ -40,9 +40,6 @@ public class TaskFacadeImpl implements TaskFacade {
         String creatorUsername = taskFilterDto.getCreatorUsername();
         String assigneeUsername = taskFilterDto.getAssigneeUsername();
 
-//        PageRequest pageable = PageRequest.of(taskFilterDto.getPage(), taskFilterDto.getSize(),
-//                Sort.by(Sort.Direction.DESC, "createDate"));
-
         if (creatorUsername != null) {
             return taskMapper.toPageResponseDto(taskService.getAllTasksByCreator(creatorUsername, pageable));
         } else {

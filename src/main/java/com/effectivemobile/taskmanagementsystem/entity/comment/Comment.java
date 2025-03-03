@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -44,4 +43,3 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
-

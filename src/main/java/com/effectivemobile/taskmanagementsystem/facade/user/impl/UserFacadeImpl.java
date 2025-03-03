@@ -24,6 +24,11 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
+        return userMapper.toPageResponseDto(userService.getAllUsers(pageable));
+    }
+
+    @Override
     public UserResponseDto updateUser(Long userId, UserCreationDto userCreationDto) {
         return userMapper.toResponseDto(userService.updateUser(userId, userMapper.toEntity(userCreationDto)));
     }
@@ -31,10 +36,5 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void deleteUser(Long userId) {
         userService.deleteUser(userId);
-    }
-
-    @Override
-    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
-        return userMapper.toPageResponseDto(userService.getAllUsers(pageable));
     }
 }
