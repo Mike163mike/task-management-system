@@ -3,11 +3,7 @@ package com.effectivemobile.taskmanagementsystem.controller.comment;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentCreateDto;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentUpdateDto;
-import com.effectivemobile.taskmanagementsystem.dto.task.TaskFilterDto;
-import com.effectivemobile.taskmanagementsystem.dto.task.TaskResponseDto;
-import com.effectivemobile.taskmanagementsystem.dto.task.TaskUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.comment.CommentFacade;
-import com.effectivemobile.taskmanagementsystem.facade.task.TaskFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,6 +25,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class CommentController {
 
     private final CommentFacade commentFacade;
+
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_USER')")
@@ -55,6 +52,7 @@ public class CommentController {
                                                                          @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(commentFacade.getAllCommentsByTask(taskId, pageable));
     }
+
 
     @PatchMapping("/update/{commentId}")
     @Operation(

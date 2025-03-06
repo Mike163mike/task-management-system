@@ -10,7 +10,7 @@ public interface CommentService {
 
     Page<Comment> getAllCommentsByTask(Long taskId, Pageable pageable);
 
-    Comment updateComment(Long commentId, String text);
+    Comment updateComment(Long commentId, Comment comment);
 
     void deleteComment(Long commentId);
 }

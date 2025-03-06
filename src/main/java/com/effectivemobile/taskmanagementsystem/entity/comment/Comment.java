@@ -2,6 +2,7 @@ package com.effectivemobile.taskmanagementsystem.entity.comment;
 
 import com.effectivemobile.taskmanagementsystem.entity.task.Task;
 import com.effectivemobile.taskmanagementsystem.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,9 +38,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
+    @JsonBackReference
     private Task task;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 }

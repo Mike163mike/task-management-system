@@ -27,7 +27,7 @@ public class TaskFacadeImpl implements TaskFacade {
 
     @Override
     public TaskResponseDto updateTask(Long taskId, TaskUpdateDto taskUpdateDto) {
-        return taskMapper.toResponseDto(taskService.updateTask(taskId, taskMapper.toEntity(taskUpdateDto)));//todo вернуть 200 статус OK и DTO с ID в теле
+        return taskMapper.toResponseDto(taskService.updateTask(taskId, taskMapper.toEntity(taskUpdateDto)));
     }
 
     @Override

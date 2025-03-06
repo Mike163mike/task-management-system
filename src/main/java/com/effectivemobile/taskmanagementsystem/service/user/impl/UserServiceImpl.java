@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long userId, User updatedUser) {
-        User oldUser = userRepository.findById(Math.toIntExact(userId))
+        User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("User with ID %s not found in DB".formatted(userId),
                         this.getClass(), "updateUser"));
 
@@ -46,6 +46,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        userRepository.deleteById(Math.toIntExact(userId));
+        userRepository.deleteById(userId);
     }
 }

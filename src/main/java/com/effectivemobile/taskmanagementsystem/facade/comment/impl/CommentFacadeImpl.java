@@ -31,7 +31,7 @@ public class CommentFacadeImpl implements CommentFacade {
 
     @Override
     public CommentResponseDto updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
-        return commentMapper.toCommentResponseDto(commentService.updateComment(commentId, commentUpdateDto.getText()));
+        return commentMapper.toCommentResponseDto(commentService.updateComment(commentId, commentMapper.toEntity(commentUpdateDto)));
     }
 
     @Override

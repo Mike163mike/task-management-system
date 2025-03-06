@@ -3,11 +3,13 @@ package com.effectivemobile.taskmanagementsystem.service.task.impl;
 import com.effectivemobile.taskmanagementsystem.entity.task.PriorityEnum;
 import com.effectivemobile.taskmanagementsystem.entity.task.StatusEnum;
 import com.effectivemobile.taskmanagementsystem.entity.task.Task;
+import com.effectivemobile.taskmanagementsystem.entity.user.User;
 import com.effectivemobile.taskmanagementsystem.exception.CustomException;
 import com.effectivemobile.taskmanagementsystem.repository.task.TaskRepository;
 import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
 import com.effectivemobile.taskmanagementsystem.service.task.TaskService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -46,11 +49,16 @@ public class TaskServiceImpl implements TaskService {
         if (updatedTask.getPriority() != null) {
             oldTask.setPriority(updatedTask.getPriority());
         }
-        if (updatedTask.getAssignee() != null) {
-            oldTask.setAssignee(updatedTask.getAssignee());
+        if (updatedTask.getAssignee() != null && updatedTask.getAssignee().getUsername() != null) {
+            if (oldTask.getAssignee() == null || !oldTask.getAssignee().getUsername().equals(updatedTask.getAssignee().getUsername())) {
+                User assignee = userRepository.findByUsername(updatedTask.getAssignee().getUsername())
+                        .orElseThrow(() -> new CustomException("User with username %s not found in DB"
+                                .formatted(updatedTask.getAssignee().getUsername()), this.getClass(), "updateTask"));
+                oldTask.setAssignee(assignee);
+            }
         }
-
-        return taskRepository.save(oldTask);
+//        oldTask.getComments().size();
+        return oldTask;
     }
 
     @Override
@@ -71,7 +79,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void populateTask(Task task) {
-        task.setCreator(userRepository.findById(1).get());//todo set user from securityContextHolder
+        task.setCreator(userRepository.findById(1L).get());//todo set user from securityContextHolder
         task.setPriority(PriorityEnum.LOW);
         task.setStatus(StatusEnum.PENDING);
     }
