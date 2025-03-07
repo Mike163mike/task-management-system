@@ -1,13 +1,19 @@
 package com.effectivemobile.taskmanagementsystem.service.user.impl;
 
+import com.effectivemobile.taskmanagementsystem.entity.role.Role;
 import com.effectivemobile.taskmanagementsystem.entity.user.User;
 import com.effectivemobile.taskmanagementsystem.exception.CustomException;
+import com.effectivemobile.taskmanagementsystem.repository.role.RoleRepository;
 import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
+import com.effectivemobile.taskmanagementsystem.security.RoleEnum;
 import com.effectivemobile.taskmanagementsystem.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +21,19 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role role = roleRepository.findByName(RoleEnum.ROLE_USER)
+                .orElseThrow(() -> new CustomException("Default role not found", this.getClass(), "createUser"));
+
+        user.setRoles(Set.of(role));
+
         return userRepository.save(user);
     }
 

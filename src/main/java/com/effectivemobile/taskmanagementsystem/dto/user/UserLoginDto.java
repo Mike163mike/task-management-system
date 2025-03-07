@@ -13,13 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreationDto {
-
-    @NotEmpty(message = "Username cannot be empty")
-    @Size(min = 3, max = 150, message = "Username must be between 3 and 150 characters")
-    @Schema(description = "The username should be between 3 and 150 characters", minLength = 3, maxLength = 150,
-            example = "Morty_Smith")
-    private String username;
+public class UserLoginDto {
 
     @NotEmpty(message = "Email cannot be empty")
     @Size(min = 6, max = 254, message = "Email must be between 6 and 254 characters")

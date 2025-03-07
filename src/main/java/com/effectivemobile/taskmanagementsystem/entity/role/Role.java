@@ -1,4 +1,4 @@
-package com.effectivemobile.taskmanagementsystem.entity.user;
+package com.effectivemobile.taskmanagementsystem.entity.role;
 
 import com.effectivemobile.taskmanagementsystem.security.RoleEnum;
 import jakarta.persistence.*;
@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 @Entity
 @Table(name = "roles")
 public class Role {

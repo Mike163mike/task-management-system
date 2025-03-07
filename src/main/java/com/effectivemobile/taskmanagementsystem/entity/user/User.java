@@ -1,6 +1,7 @@
 package com.effectivemobile.taskmanagementsystem.entity.user;
 
 import com.effectivemobile.taskmanagementsystem.entity.comment.Comment;
+import com.effectivemobile.taskmanagementsystem.entity.role.Role;
 import com.effectivemobile.taskmanagementsystem.entity.task.Task;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -38,10 +41,10 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false)
-        private String password;
+    private String password;
 
     @Column(name = "email", nullable = false, unique = true)
-        private String email;
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -49,7 +52,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();

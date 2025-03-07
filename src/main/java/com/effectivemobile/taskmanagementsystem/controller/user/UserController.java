@@ -1,15 +1,18 @@
 package com.effectivemobile.taskmanagementsystem.controller.user;
 
+import com.effectivemobile.taskmanagementsystem.constant.AppConstant;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
 import com.effectivemobile.taskmanagementsystem.facade.user.UserFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.effectivemobile.taskmanagementsystem.constant.AppConstant.APP_PREFIX;
@@ -18,13 +21,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequestMapping(APP_PREFIX + "/user")
 @AllArgsConstructor
-//@SecurityRequirement(name = CoreConstants.Security.AUTHORIZATION)
+@SecurityRequirement(name = AppConstant.AUTHORIZATION)
 public class UserController {
 
     private final UserFacade userFacade;
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(
             summary = "Create new user",
             description = """
@@ -36,6 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Get page of users",
             description = """
@@ -48,6 +51,7 @@ public class UserController {
     }
 
     @PatchMapping("/update/{userId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Update user",
             description = """
@@ -61,6 +65,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Delete user",
             description = """

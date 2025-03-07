@@ -1,17 +1,20 @@
 package com.effectivemobile.taskmanagementsystem.controller.task;
 
+import com.effectivemobile.taskmanagementsystem.constant.AppConstant;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskCreateDto;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskFilterDto;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.task.TaskUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.task.TaskFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +25,13 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping(APP_PREFIX + "/task")
 @AllArgsConstructor
 @Validated
-//@SecurityRequirement(name = CoreConstants.Security.AUTHORIZATION)
+@SecurityRequirement(name = AppConstant.AUTHORIZATION)
 public class TaskController {
 
     private final TaskFacade taskFacade;
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Create new task",
             description = """
@@ -41,6 +44,7 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Get page of tasks",
             description = """
@@ -56,6 +60,7 @@ public class TaskController {
     }
 
     @PatchMapping("/update/{taskId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Update task",
             description = """
@@ -69,6 +74,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/delete/{taskId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Delete task",
             description = """

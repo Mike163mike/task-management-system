@@ -1,16 +1,19 @@
 package com.effectivemobile.taskmanagementsystem.controller.comment;
 
+import com.effectivemobile.taskmanagementsystem.constant.AppConstant;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentCreateDto;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.comment.CommentUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.comment.CommentFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +24,14 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping(APP_PREFIX + "/comment")
 @AllArgsConstructor
 @Validated
-//@SecurityRequirement(name = CoreConstants.Security.AUTHORIZATION)
+@SecurityRequirement(name = AppConstant.AUTHORIZATION)
 public class CommentController {
 
     private final CommentFacade commentFacade;
 
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Create new comment",
             description = """
@@ -40,6 +43,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{taskId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Get page of comments",
             description = """
@@ -55,6 +59,7 @@ public class CommentController {
 
 
     @PatchMapping("/update/{commentId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Update comment",
             description = """
@@ -68,6 +73,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete/{commentId}")
+    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Delete comment",
             description = """

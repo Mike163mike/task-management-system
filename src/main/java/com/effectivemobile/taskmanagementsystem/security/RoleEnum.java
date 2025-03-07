@@ -2,9 +2,9 @@ package com.effectivemobile.taskmanagementsystem.security;
 
 public enum RoleEnum {
 
-    USER,
+    ROLE_USER,
 
-    ASSIGNEE,
+    ROLE_ASSIGNEE,
 
-    ADMIN
+    ROLE_ADMIN
 }
