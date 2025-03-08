@@ -13,4 +13,12 @@ public interface UserService {
     User updateUser(Long userId, User user);
 
     Page<User> getAllUsers(Pageable pageable);
+
+    Long getCurrentUserId();
+
+    User getCurrentUser();
+
+    boolean isAdmin(User user);
+
+    boolean isAdminOrAssignee(User user);
 }

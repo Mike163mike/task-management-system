@@ -48,8 +48,8 @@ public class TaskController {
     @Operation(
             summary = "Get page of tasks",
             description = """
-                    Get all tasks by the creator's username or the assignee's username. Returns a paginated list of
-                    tasks. In the query, you should set only one of these usernames - the creator's or the assignee's -
+                    Get all tasks by the creator's email or the assignee's email. Returns a paginated list of
+                    tasks. In the query, you should set only one of these email - the creator's or the assignee's -
                     and not both. Also, you should specify the page parameters - by default, start with the 0th page and
                     20 items per page.
                     """

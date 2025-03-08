@@ -15,14 +15,14 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class TaskFilterDto {
 
-    @Schema(description = "The username of the assignee. Only one from two! Remember?", example = "Morty_Smith")
-    private String assigneeUsername;
+    @Schema(description = "The email of the assignee. Only one from two! Remember?", example = "morty_smith@gmail.com")
+    private String assigneeEmail;
 
-    @Schema(description = "The username of the creator. Only one from two! Remember?", example = "Rick_Sanchez")
-    private String creatorUsername;
+    @Schema(description = "The email of the creator. Only one from two! Remember?", example = "rick_sanchez@gmail.com")
+    private String creatorEmail;
 
-    @AssertTrue(message = "Exactly one of assigneeUsername or creatorUsername must be provided")
+    @AssertTrue(message = "Exactly one of assigneeEmail or creatorEmail must be provided")
     public boolean isValid() {
-        return (assigneeUsername == null) ^ (creatorUsername == null);  // Либо одно поле null, либо другое
+        return (assigneeEmail == null) ^ (creatorEmail == null);  // Либо одно поле null, либо другое
     }
 }

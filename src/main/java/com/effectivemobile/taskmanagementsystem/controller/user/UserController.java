@@ -3,6 +3,7 @@ package com.effectivemobile.taskmanagementsystem.controller.user;
 import com.effectivemobile.taskmanagementsystem.constant.AppConstant;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
+import com.effectivemobile.taskmanagementsystem.dto.user.UserUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.user.UserFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,7 +31,7 @@ public class UserController {
     @Operation(
             summary = "Create new user",
             description = """
-                    Create new user
+                    Everybody can create new user for yourself.
                     """
     )
     public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserCreationDto userCreationDto) {
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(
             summary = "Get page of users",
             description = """
@@ -60,12 +61,12 @@ public class UserController {
                     """
     )
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,
-                                                      @RequestBody @Valid UserCreationDto userCreationDto) {
-        return ResponseEntity.ok(userFacade.updateUser(userId, userCreationDto));
+                                                      @RequestBody @Valid UserUpdateDto userUpdateDto) {
+        return ResponseEntity.ok(userFacade.updateUser(userId, userUpdateDto));
     }
 
     @DeleteMapping("/delete/{userId}")
-    @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
             summary = "Delete user",
             description = """

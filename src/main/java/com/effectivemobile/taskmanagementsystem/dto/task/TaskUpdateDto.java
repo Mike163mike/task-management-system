@@ -29,6 +29,6 @@ public class TaskUpdateDto {
     @Pattern(regexp = "LOW|MEDIUM|HIGH", message = "Priority must be LOW, MEDIUM, or HIGH")
     private String priority;
 
-    @Schema(description = "Existing username or null")
+    @Schema(description = "Existing email or null")
     private String assignee;
 }

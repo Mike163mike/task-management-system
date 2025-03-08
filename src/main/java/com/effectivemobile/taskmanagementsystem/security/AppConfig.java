@@ -16,10 +16,10 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> userRepository.findByEmail(username)
+        return email -> userRepository.findByEmail(email)
                 .map(UserDetailsAdapter::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with the provided email address %s: "
-                        .formatted(username)));
+                        .formatted(email)));
     }
 
     @Bean

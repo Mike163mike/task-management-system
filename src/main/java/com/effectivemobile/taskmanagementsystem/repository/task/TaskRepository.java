@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @EntityGraph(attributePaths = {"comments", "creator", "assignee"})
-    @Query("SELECT DISTINCT t FROM Task t WHERE t.assignee.username = :assigneeUsername ORDER BY t.changeDate DESC")
-    Page<Task> findAllByAssigneeUsernameOrderByCreateDateDesc(@Param("assigneeUsername") String assigneeUsername,
-                                                              Pageable pageable);
+    @Query("SELECT DISTINCT t FROM Task t WHERE t.assignee.email = :assigneeEmail ORDER BY t.changeDate DESC")
+    Page<Task> findAllByAssigneeEmailOrderByCreateDateDesc(@Param("assigneeEmail") String assigneeEmail,
+                                                           Pageable pageable);
 
     @EntityGraph(attributePaths = {"comments", "creator", "assignee"})
-    @Query("SELECT DISTINCT t FROM Task t WHERE t.creator.username = :creatorUsername ORDER BY t.changeDate DESC")
-    Page<Task> findAllByCreatorUsernameOrderByCreateDateDesc(@Param("creatorUsername") String creatorUsername,
-                                                             Pageable pageable);
+    @Query("SELECT DISTINCT t FROM Task t WHERE t.creator.email = :creatorEmail ORDER BY t.changeDate DESC")
+    Page<Task> findAllByCreatorEmailOrderByCreateDateDesc(@Param("creatorEmail") String creatorEmail,
+                                                          Pageable pageable);
 }

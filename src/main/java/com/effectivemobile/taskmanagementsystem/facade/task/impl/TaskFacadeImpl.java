@@ -37,13 +37,13 @@ public class TaskFacadeImpl implements TaskFacade {
 
     @Override
     public Page<TaskResponseDto> getAllTasksByActor(TaskFilterDto taskFilterDto, Pageable pageable) {
-        String creatorUsername = taskFilterDto.getCreatorUsername();
-        String assigneeUsername = taskFilterDto.getAssigneeUsername();
+        String creatorEmail = taskFilterDto.getCreatorEmail();
+        String assigneeEmail = taskFilterDto.getAssigneeEmail();
 
-        if (creatorUsername != null) {
-            return taskMapper.toPageResponseDto(taskService.getAllTasksByCreator(creatorUsername, pageable));
+        if (creatorEmail != null) {
+            return taskMapper.toPageResponseDto(taskService.getAllTasksByCreator(creatorEmail, pageable));
         } else {
-            return taskMapper.toPageResponseDto(taskService.getAllTasksByAssignee(assigneeUsername, pageable));
+            return taskMapper.toPageResponseDto(taskService.getAllTasksByAssignee(assigneeEmail, pageable));
         }
     }
 }

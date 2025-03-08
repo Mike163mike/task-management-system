@@ -35,7 +35,8 @@ public class CommentController {
     @Operation(
             summary = "Create new comment",
             description = """
-                    A new comment can be created by users with role 'ASSIGNEE' and 'ADMIN'
+                    A new comment can be created by users with roles 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE'
+                    can create comments only for their own tasks. "ADMIN" - for anyone.
                     """
     )
     public ResponseEntity<CommentResponseDto> createComment(@RequestBody @Valid CommentCreateDto commentCreateDto) {
@@ -49,7 +50,8 @@ public class CommentController {
             description = """
                     Get all comments related to a specific task by its ID. The endpoint returns a paginated list of
                     comments. You can specify the page parameters, with the default being to start on the 0th page with
-                    20 items per page.
+                    20 items per page. User with role 'ASSIGNEE' can get comments only for their own tasks. 'ADMIN'
+                    - any.
                     """
     )
     public ResponseEntity<Page<CommentResponseDto>> getAllCommentsByTask(@PathVariable Long taskId,
@@ -64,7 +66,7 @@ public class CommentController {
             summary = "Update comment",
             description = """
                     Update comment by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    update only self comments. 'ADMIN' - any.
+                    update comments only for their own tasks. 'ADMIN' - any.
                     """
     )
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId,
@@ -78,7 +80,7 @@ public class CommentController {
             summary = "Delete comment",
             description = """
                     Delete comment by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    delete only self commit. 'ADMIN' - any.
+                    delete commit only for their own tasks. 'ADMIN' - any.
                     """
     )
     public ResponseEntity<Void> deleteCommit(@PathVariable Long commentId) {

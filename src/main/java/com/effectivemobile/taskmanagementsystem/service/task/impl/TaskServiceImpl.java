@@ -8,6 +8,7 @@ import com.effectivemobile.taskmanagementsystem.exception.CustomException;
 import com.effectivemobile.taskmanagementsystem.repository.task.TaskRepository;
 import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
 import com.effectivemobile.taskmanagementsystem.service.task.TaskService;
+import com.effectivemobile.taskmanagementsystem.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public Task createTask(Task task) {
@@ -49,37 +51,37 @@ public class TaskServiceImpl implements TaskService {
         if (updatedTask.getPriority() != null) {
             oldTask.setPriority(updatedTask.getPriority());
         }
-        if (updatedTask.getAssignee() != null && updatedTask.getAssignee().getUsername() != null) {
-            if (oldTask.getAssignee() == null || !oldTask.getAssignee().getUsername().equals(updatedTask.getAssignee().getUsername())) {
-                User assignee = userRepository.findByUsername(updatedTask.getAssignee().getUsername())
-                        .orElseThrow(() -> new CustomException("User with username %s not found in DB"
-                                .formatted(updatedTask.getAssignee().getUsername()), this.getClass(), "updateTask"));
+        if (updatedTask.getAssignee() != null && updatedTask.getAssignee().getEmail() != null) {
+            if (oldTask.getAssignee() == null || !oldTask.getAssignee().getEmail().equals(updatedTask.getAssignee().getEmail())) {
+                User assignee = userRepository.findByEmail(updatedTask.getAssignee().getEmail())
+                        .orElseThrow(() -> new CustomException("User with email %s not found in DB"
+                                .formatted(updatedTask.getAssignee().getEmail()), this.getClass(), "updateTask"));
                 oldTask.setAssignee(assignee);
             }
         }
-//        oldTask.getComments().size();
         return oldTask;
     }
 
     @Override
+    @Transactional
     public void deleteTask(Long taskId) {
         taskRepository.deleteById(taskId);
     }
 
     @Override
     @Transactional//todo ?
-    public Page<Task> getAllTasksByCreator(String creatorUsername, Pageable pageable) {
-        return taskRepository.findAllByCreatorUsernameOrderByCreateDateDesc(creatorUsername, pageable);
+    public Page<Task> getAllTasksByCreator(String creatorEmail, Pageable pageable) {
+        return taskRepository.findAllByCreatorEmailOrderByCreateDateDesc(creatorEmail, pageable);
     }
 
     @Override
     @Transactional//todo ?
-    public Page<Task> getAllTasksByAssignee(String assigneeUsername, Pageable pageable) {
-        return taskRepository.findAllByAssigneeUsernameOrderByCreateDateDesc(assigneeUsername, pageable);
+    public Page<Task> getAllTasksByAssignee(String assigneeEmail, Pageable pageable) {
+        return taskRepository.findAllByAssigneeEmailOrderByCreateDateDesc(assigneeEmail, pageable);
     }
 
     private void populateTask(Task task) {
-        task.setCreator(userRepository.findById(1L).get());//todo set user from securityContextHolder
+        task.setCreator(userService.getCurrentUser());
         task.setPriority(PriorityEnum.LOW);
         task.setStatus(StatusEnum.PENDING);
     }

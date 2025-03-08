@@ -30,4 +30,8 @@ public record UserDetailsAdapter(User user) implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
+    public Long getUserId() {
+        return user.getId();
+    }
 }

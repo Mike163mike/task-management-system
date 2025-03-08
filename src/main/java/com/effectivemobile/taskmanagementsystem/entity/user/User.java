@@ -37,9 +37,6 @@ public class User {
     @Column(name = "change_date")
     private OffsetDateTime changeDate;
 
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
-
     @Column(name = "password", nullable = false)
     private String password;
 

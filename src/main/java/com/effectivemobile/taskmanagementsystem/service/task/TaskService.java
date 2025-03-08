@@ -12,7 +12,7 @@ public interface TaskService {
 
     void deleteTask(Long taskId);
 
-    Page<Task> getAllTasksByCreator(String creatorUsername, Pageable pageable);
+    Page<Task> getAllTasksByCreator(String creatorEmail, Pageable pageable);
 
-    Page<Task> getAllTasksByAssignee(String assigneeUsername, Pageable pageable);
+    Page<Task> getAllTasksByAssignee(String assigneeEmail, Pageable pageable);
 }

@@ -1,53 +1,52 @@
-create table users
+CREATE TABLE users
 (
-    id          bigserial primary key,
-    create_date timestamp,
-    change_date timestamp,
-    username    varchar(150) not null unique,
-    password    varchar(255) not null,
-    email       varchar(254) not null unique
+    id          BIGSERIAL PRIMARY KEY,
+    create_date TIMESTAMP,
+    change_date TIMESTAMP,
+    password    VARCHAR(255) NOT NULL,
+    email       VARCHAR(254) NOT NULL UNIQUE
 );
 
-create table roles
+CREATE TABLE roles
 (
-    id   bigserial primary key,
-    name varchar(50) not null unique
+    id   BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
-create table user_roles
+CREATE TABLE user_roles
 (
-    user_id bigint not null,
-    role_id bigint not null,
-    primary key (user_id, role_id),
-    constraint fk_user
-        foreign key (user_id) references users (id) on delete cascade,
-    constraint fk_role
-        foreign key (role_id) references roles (id) on delete cascade
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_role
+        FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
-create table tasks
+CREATE TABLE tasks
 (
-    id          bigserial primary key,
-    create_date timestamp,
-    change_date timestamp,
-    title       varchar(255) not null,
-    description text,
-    status      varchar(20)  not null,
-    priority    varchar(20)  not null,
-    creator_id  bigint       not null,
-    assignee_id bigint,
-    constraint fk_task_creator foreign key (creator_id) references users (id) on delete cascade,
-    constraint fk_task_assignee foreign key (assignee_id) references users (id) on delete set null
+    id          BIGSERIAL PRIMARY KEY,
+    create_date TIMESTAMP,
+    change_date TIMESTAMP,
+    title       VARCHAR(255) NOT NULL,
+    description TEXT,
+    status      VARCHAR(20)  NOT NULL,
+    priority    VARCHAR(20)  NOT NULL,
+    creator_id  BIGINT       NOT NULL,
+    assignee_id BIGINT,
+    CONSTRAINT fk_task_creator FOREIGN KEY (creator_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_task_assignee FOREIGN KEY (assignee_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
-create table comments
+CREATE TABLE comments
 (
-    id          bigserial primary key,
-    create_date timestamp,
-    change_date timestamp,
-    text        text   not null,
-    task_id     bigint not null,
-    user_id     bigint not null,
-    constraint fk_comment_task foreign key (task_id) references tasks (id) on delete cascade,
-    constraint fk_comment_user foreign key (user_id) references users (id) on delete cascade
+    id          BIGSERIAL PRIMARY KEY,
+    create_date TIMESTAMP,
+    change_date TIMESTAMP,
+    text        TEXT   NOT NULL,
+    task_id     BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
+    CONSTRAINT fk_comment_task FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+    CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

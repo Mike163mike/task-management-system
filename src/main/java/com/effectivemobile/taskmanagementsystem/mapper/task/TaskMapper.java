@@ -14,13 +14,13 @@ public interface TaskMapper {
 
     Task toEntity(TaskCreateDto taskCreateDto);
 
-    @Mapping(target = "assignee.username", source = "assignee")
+    @Mapping(target = "assignee.email", source = "assignee")
     @Mapping(target = "status", source = "status", qualifiedByName = "mapStatus")
     @Mapping(target = "priority", source = "priority", qualifiedByName = "mapPriority")
     Task toEntity(TaskUpdateDto taskUpdateDto);
 
-    @Mapping(target = "creator", source = "creator.username")
-    @Mapping(target = "assignee", source = "assignee.username")
+    @Mapping(target = "creator", source = "creator.email")
+    @Mapping(target = "assignee", source = "assignee.email")
     TaskResponseDto toResponseDto(Task task);
 
     default Page<TaskResponseDto> toPageResponseDto(Page<Task> tasks) {

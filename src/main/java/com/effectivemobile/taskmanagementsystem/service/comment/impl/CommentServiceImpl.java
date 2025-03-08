@@ -6,10 +6,9 @@ import com.effectivemobile.taskmanagementsystem.entity.user.User;
 import com.effectivemobile.taskmanagementsystem.exception.CustomException;
 import com.effectivemobile.taskmanagementsystem.repository.comment.CommentRepository;
 import com.effectivemobile.taskmanagementsystem.repository.task.TaskRepository;
-import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
 import com.effectivemobile.taskmanagementsystem.service.comment.CommentService;
+import com.effectivemobile.taskmanagementsystem.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,79 +16,116 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    private final UserRepository userRepository;
-
     private final TaskRepository taskRepository;
+
+    private final UserService userService;
 
     @Override
     public Comment createComment(Comment comment) {
+        Long taskId = comment.getTask().getId();
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                        this.getClass(), "createComment"));
+
+        checkUserPermissionForTask(task);
+
         populateComment(comment);
         return commentRepository.save(comment);
     }
 
     @Override
     public Page<Comment> getAllCommentsByTask(Long taskId, Pageable pageable) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                        this.getClass(), "getAllCommentsByTask"));
+
+        checkUserPermissionForTask(task);
+
         return commentRepository.findAllByTaskId(taskId, pageable);
     }
 
+    @Override
     public Comment updateComment(Long commentId, Comment updatedComment) {
         Comment commentToUpdate = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("A comment with the ID %s not found",
+                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB".formatted(commentId),
                         this.getClass(), "updateComment"));
 
-        populateComment(commentToUpdate, updatedComment);
+        checkUserPermissionForComment(commentToUpdate);
 
+        populateComment(commentToUpdate, updatedComment);
         return commentRepository.save(commentToUpdate);
     }
 
     @Transactional
+    @Override
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("A comment with the ID %s not found", this.getClass(),
-                        "deleteComment"));
+                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB".formatted(commentId),
+                        this.getClass(), "deleteComment"));
+
+        checkUserPermissionForComment(comment);
 
         Task task = comment.getTask();
         task.getComments().remove(comment);
         taskRepository.save(task);
-
         commentRepository.delete(comment);
     }
 
+    private void checkUserPermissionForTask(Task task) {
+        Long currentUserId = userService.getCurrentUserId();
+        Long taskCreatorId = task.getCreator().getId();
+        User currentUser = userService.getCurrentUser();
+
+        if (!taskCreatorId.equals(currentUserId) && !userService.isAdmin(currentUser)) {
+            throw new CustomException("You don't have permission for this task", this.getClass(),
+                    "checkUserPermissionForTask");
+        }
+    }
+
+    private void checkUserPermissionForComment(Comment comment) {
+        Long currentUserId = userService.getCurrentUserId();
+        Long commentHolderId = comment.getUser().getId();
+        User currentUser = userService.getCurrentUser();
+
+        if (!currentUserId.equals(commentHolderId) && !userService.isAdmin(currentUser)) {
+            throw new CustomException("You don't have permission for this comment", this.getClass(),
+                    "checkUserPermissionForComment");
+        }
+    }
 
     private void populateComment(Comment commentToUpdate, Comment updatedComment) {
         if (updatedComment.getText() != null) {
             commentToUpdate.setText(updatedComment.getText());
         }
 
-        if (commentRepository.existsByTextAndIdNot(commentToUpdate.getText(), commentToUpdate.getId())) {
-            throw new CustomException("A comment with the same text already exists", this.getClass(), "populateComment");
-        }
-
+        checkDuplicateCommentText(commentToUpdate);
         populateTaskAndUser(commentToUpdate, updatedComment);
     }
 
     private void populateComment(Comment comment) {
-        if (commentRepository.existsByText(comment.getText())) {
-            throw new CustomException("A comment with the same text already exists", this.getClass(), "populateComment");
-        }
-
+        checkDuplicateCommentText(comment);
         populateTaskAndUser(comment, comment);
+    }
+
+    private void checkDuplicateCommentText(Comment comment) {
+        if (commentRepository.existsByTextAndIdNot(comment.getText(), comment.getId())) {
+            throw new CustomException("A comment with the same text already exists", this.getClass(),
+                    "checkDuplicateCommentText");
+        }
     }
 
     private void populateTaskAndUser(Comment commentToUpdate, Comment updatedComment) {
         if (updatedComment.getTask() != null) {
             Task task = taskRepository.findById(updatedComment.getTask().getId())
-                    .orElseThrow(() -> new CustomException("Task not found", this.getClass(), "populateComment"));
+                    .orElseThrow(() -> new CustomException("Task not found", this.getClass(), "populateTaskAndUser"));
             commentToUpdate.setTask(task);
         }
 
-        User user = userRepository.findById(1L) // TODO: заменить на реального пользователя
-                .orElseThrow(() -> new CustomException("User not found", this.getClass(), "populateComment"));
-        commentToUpdate.setUser(user);
+        User currentUser = userService.getCurrentUser();
+        commentToUpdate.setUser(currentUser);
     }
 }

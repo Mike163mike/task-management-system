@@ -14,11 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserUpdateDto {
 
-    @Size(min = 3, max = 150, message = "Username must be between 3 and 150 characters")
-    @Schema(description = "The username should be between 3 and 150 characters", minLength = 3, maxLength = 150,
-            example = "Bender_Rodriguez")
-    private String username;
-
     @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")
     @Schema(description = "The password should be between 6 and 255 characters", minLength = 6, maxLength = 255,
             example = "Very_strong_PASSWORD_123")
