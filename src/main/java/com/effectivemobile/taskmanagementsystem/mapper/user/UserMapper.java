@@ -2,6 +2,7 @@ package com.effectivemobile.taskmanagementsystem.mapper.user;
 
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
+import com.effectivemobile.taskmanagementsystem.dto.user.UserUpdateDto;
 import com.effectivemobile.taskmanagementsystem.entity.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 public interface UserMapper {
 
     User toEntity(UserCreationDto userCreationDto);
+
+    User toEntity(UserUpdateDto userUpdateDto);
 
     UserResponseDto toResponseDto(User user);
 

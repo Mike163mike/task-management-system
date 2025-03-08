@@ -2,6 +2,7 @@ package com.effectivemobile.taskmanagementsystem.facade.user.impl;
 
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
+import com.effectivemobile.taskmanagementsystem.dto.user.UserUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.user.UserFacade;
 import com.effectivemobile.taskmanagementsystem.mapper.user.UserMapper;
 import com.effectivemobile.taskmanagementsystem.service.user.UserService;
@@ -29,8 +30,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserResponseDto updateUser(Long userId, UserCreationDto userCreationDto) {
-        return userMapper.toResponseDto(userService.updateUser(userId, userMapper.toEntity(userCreationDto)));
+    public UserResponseDto updateUser(Long userId, UserUpdateDto userUpdateDto) {
+        return userMapper.toResponseDto(userService.updateUser(userId, userMapper.toEntity(userUpdateDto)));
     }
 
     @Override
