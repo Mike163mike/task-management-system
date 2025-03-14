@@ -2,7 +2,6 @@ package com.effectivemobile.taskmanagementsystem.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,33 @@ public class JwtService {
     @Value("${jwt.secret_key}")
     private String secretKey;
 
-    public String generateToken(UserDetails userDetails) {
+    @Value("${jwt.access_token_expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh_token_expiration}")
+    private long refreshTokenExpiration;
+
+//    public String generateToken(UserDetails userDetails) {
+//        Map<String, Object> claims = new HashMap<>();
+//        return createToken(claims, userDetails.getUsername());
+//    }
+
+    public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userDetails.getUsername(), accessTokenExpiration);
     }
 
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, userDetails.getUsername(), refreshTokenExpiration);
+    }
+
+//    public boolean validateToken(String token, UserDetails userDetails) {
+//        return extractUsername(token).equals(userDetails.getUsername());
+//    }
+
     public boolean validateToken(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername());
+        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public String extractUsername(String token) {
@@ -37,13 +56,26 @@ public class JwtService {
                 .getSubject();
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
+    public boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+    }
+
+    private String createToken(Map<String, Object> claims, String username, Long expirationTime) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(DateUtils.addDays(new Date(), 1))//todo set correct expiration period and move to property
-                .signWith(getSigningKey())//todo control
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getSigningKey())
                 .compact();
     }
 

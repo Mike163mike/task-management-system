@@ -44,7 +44,8 @@ public class UserController {
             summary = "Get page of users",
             description = """
                     Get all users. Returns a paginated list of users. You should specify the page parameters in the query
-                    parameters, by default it start with the 0th page and 20 items per page.
+                    parameters, by default it start with the 0th page and 20 items per page. Get all users can users with
+                    role 'ROLE_ADMIN' only.
                     """
     )
     public ResponseEntity<Page<UserResponseDto>> getAllUsers(@ParameterObject Pageable pageable) {
@@ -56,8 +57,8 @@ public class UserController {
     @Operation(
             summary = "Update user",
             description = """
-                    Update user by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    update only self account. 'ADMIN' - any.
+                    Update user by its ID can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can update only self account. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,
@@ -70,8 +71,8 @@ public class UserController {
     @Operation(
             summary = "Delete user",
             description = """
-                    Delete self account by its ID can users with any role: 'USER', 'ASSIGNEE' and 'ADMIN'. User with
-                    roles 'USER' and 'ASSIGNEE' can delete only self account. 'ADMIN' - any.
+                    Delete self account by its ID can users with any role: 'ROLE_USER', 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'.
+                    User with roles 'ROLE_USER' and 'ROLE_ASSIGNEE' can delete only self account. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {

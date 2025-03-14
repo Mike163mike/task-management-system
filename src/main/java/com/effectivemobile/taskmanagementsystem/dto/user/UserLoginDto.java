@@ -18,7 +18,7 @@ public class UserLoginDto {
     @NotEmpty(message = "Email cannot be empty")
     @Size(min = 6, max = 254, message = "Email must be between 6 and 254 characters")
     @Schema(description = "The email should be between 5 and 254 characters", minLength = 6, maxLength = 254,
-            example = "Morty_Smith@gmail.com")
+            example = "morty_smith@gmail.com")
     @Email(message = "Invalid email format")
     private String email;
 

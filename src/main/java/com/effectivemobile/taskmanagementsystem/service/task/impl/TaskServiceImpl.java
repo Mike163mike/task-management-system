@@ -10,7 +10,6 @@ import com.effectivemobile.taskmanagementsystem.repository.user.UserRepository;
 import com.effectivemobile.taskmanagementsystem.service.task.TaskService;
 import com.effectivemobile.taskmanagementsystem.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,17 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
     private final UserRepository userRepository;
+
     private final UserService userService;
 
     @Override
     public Task createTask(Task task) {
-        populateTask(task);
+        initializeNewTask(task);
         return taskRepository.save(task);
     }
 
@@ -38,6 +37,8 @@ public class TaskServiceImpl implements TaskService {
         Task oldTask = taskRepository.findById(taskId)
                 .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
                         this.getClass(), "updateTask"));
+
+        validateTaskAccess(oldTask);
 
         if (updatedTask.getTitle() != null) {
             oldTask.setTitle(updatedTask.getTitle());
@@ -51,36 +52,59 @@ public class TaskServiceImpl implements TaskService {
         if (updatedTask.getPriority() != null) {
             oldTask.setPriority(updatedTask.getPriority());
         }
-        if (updatedTask.getAssignee() != null && updatedTask.getAssignee().getEmail() != null) {
-            if (oldTask.getAssignee() == null || !oldTask.getAssignee().getEmail().equals(updatedTask.getAssignee().getEmail())) {
-                User assignee = userRepository.findByEmail(updatedTask.getAssignee().getEmail())
-                        .orElseThrow(() -> new CustomException("User with email %s not found in DB"
-                                .formatted(updatedTask.getAssignee().getEmail()), this.getClass(), "updateTask"));
-                oldTask.setAssignee(assignee);
+
+        if (updatedTask.getAssignee() != null) {
+            if (updatedTask.getAssignee().getEmail() != null) {
+                if (oldTask.getAssignee() == null ||
+                        !oldTask.getAssignee().getEmail().equals(updatedTask.getAssignee().getEmail())) {
+
+                    User assignee = userRepository.findByEmail(updatedTask.getAssignee().getEmail())
+                            .orElseThrow(() -> new CustomException("User with email %s not found in DB"
+                                    .formatted(updatedTask.getAssignee().getEmail()), this.getClass(), "updateTask"));
+                    oldTask.setAssignee(assignee);
+                }
+            } else {
+                oldTask.setAssignee(null);
             }
         }
         return oldTask;
     }
 
+
     @Override
     @Transactional
     public void deleteTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                        this.getClass(), "deleteTask"));
+
+        validateTaskAccess(task);
+
         taskRepository.deleteById(taskId);
     }
 
     @Override
-    @Transactional//todo ?
     public Page<Task> getAllTasksByCreator(String creatorEmail, Pageable pageable) {
         return taskRepository.findAllByCreatorEmailOrderByCreateDateDesc(creatorEmail, pageable);
     }
 
     @Override
-    @Transactional//todo ?
     public Page<Task> getAllTasksByAssignee(String assigneeEmail, Pageable pageable) {
         return taskRepository.findAllByAssigneeEmailOrderByCreateDateDesc(assigneeEmail, pageable);
     }
 
-    private void populateTask(Task task) {
+    public void validateTaskAccess(Task task) {
+        Long currentUserId = userService.getCurrentUserId();
+        Long taskCreatorId = task.getCreator().getId();
+        User currentUser = userService.getCurrentUser();
+
+        if (!taskCreatorId.equals(currentUserId) && !userService.isAdmin(currentUser)) {
+            throw new CustomException("You don't have permission for this task", this.getClass(),
+                    "validateTaskAccess");
+        }
+    }
+
+    private void initializeNewTask(Task task) {
         task.setCreator(userService.getCurrentUser());
         task.setPriority(PriorityEnum.LOW);
         task.setStatus(StatusEnum.PENDING);

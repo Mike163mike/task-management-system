@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public record UserDetailsAdapter(User user) implements UserDetails {
 
@@ -18,7 +17,7 @@ public record UserDetailsAdapter(User user) implements UserDetails {
                 .orElse(Collections.emptySet())
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

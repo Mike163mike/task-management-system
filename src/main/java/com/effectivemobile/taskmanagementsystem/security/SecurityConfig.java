@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(APP_PREFIX + "/user/create").permitAll()
                         .requestMatchers(APP_PREFIX + "/auth/login").permitAll()
+                        .requestMatchers(APP_PREFIX + "/auth/refresh-token").permitAll()
                         .requestMatchers("/swagger", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )

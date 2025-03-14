@@ -4,5 +4,7 @@ import java.util.Map;
 
 public interface SecurityService {
 
-    Map<String, String> login(String email, String password);
+    Map<String, String> authenticateAndGenerateTokens(String email, String password);
+
+    Map<String, String> refreshAccessToken(Map<String, String> response);
 }

@@ -16,6 +16,11 @@ public class SecurityFacadeImpl implements SecurityFacade {
 
     @Override
     public Map<String, String> login(UserLoginDto userLoginDto) {
-        return securityService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
+        return securityService.authenticateAndGenerateTokens(userLoginDto.getEmail(), userLoginDto.getPassword());
+    }
+
+    @Override
+    public Map<String, String> refreshAccessToken(Map<String, String> response) {
+        return securityService.refreshAccessToken(response);
     }
 }

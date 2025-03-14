@@ -15,4 +15,6 @@ public interface TaskService {
     Page<Task> getAllTasksByCreator(String creatorEmail, Pageable pageable);
 
     Page<Task> getAllTasksByAssignee(String assigneeEmail, Pageable pageable);
+
+    void validateTaskAccess(Task task);
 }

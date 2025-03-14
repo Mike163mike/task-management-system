@@ -14,14 +14,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserUpdateDto {
 
+    @Size(min = 6, max = 254, message = "Email must be between 6 and 254 characters")
+    @Schema(description = "The email should be between 5 and 254 characters", minLength = 6, maxLength = 254,
+            example = "bender_rodriguez@gmail.com")
+    @Email(message = "Invalid email format")
+    private String email;
+
     @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")
     @Schema(description = "The password should be between 6 and 255 characters", minLength = 6, maxLength = 255,
             example = "Very_strong_PASSWORD_123")
     private String password;
 
-    @Size(min = 6, max = 254, message = "Email must be between 6 and 254 characters")
-    @Schema(description = "The email should be between 5 and 254 characters", minLength = 6, maxLength = 254,
-            example = "Bender_Rodriguez@gmail.com")
-    @Email(message = "Invalid email format")
-    private String email;
 }

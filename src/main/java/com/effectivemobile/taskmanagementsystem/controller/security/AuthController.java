@@ -24,4 +24,9 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> login(@RequestBody UserLoginDto userLoginDto) {
         return ResponseEntity.ok(securityFacade.login(userLoginDto));
     }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestBody Map<String, String> response) {
+        return ResponseEntity.ok(securityFacade.refreshAccessToken(response));
+    }
 }

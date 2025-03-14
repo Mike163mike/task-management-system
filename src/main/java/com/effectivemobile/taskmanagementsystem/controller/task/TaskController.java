@@ -35,8 +35,8 @@ public class TaskController {
     @Operation(
             summary = "Create new task",
             description = """
-                    A new task is created by users with role 'ASSIGNEE' and 'ADMIN'. The new task created with status
-                    'PENDING' and priority 'LOW'. It got creator as its creator-field.
+                    A new task can be created by users with any roles: 'ROLE_USER', 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'.
+                    The new task created with status 'PENDING' and priority 'LOW'. It got creator as its creator-field.
                     """
     )
     public ResponseEntity<TaskResponseDto> createTask(@RequestBody @Valid TaskCreateDto taskCreateDto) {
@@ -51,7 +51,8 @@ public class TaskController {
                     Get all tasks by the creator's email or the assignee's email. Returns a paginated list of
                     tasks. In the query, you should set only one of these email - the creator's or the assignee's -
                     and not both. Also, you should specify the page parameters - by default, start with the 0th page and
-                    20 items per page.
+                    20 items per page. Get tasks by its actor can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'.
+                    User with role 'ROLE_ASSIGNEE' can get only self tasks. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<Page<TaskResponseDto>> getAllTasksByActor(@Valid @ModelAttribute TaskFilterDto taskFilterDto,
@@ -64,8 +65,8 @@ public class TaskController {
     @Operation(
             summary = "Update task",
             description = """
-                    Update task by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    update only self tasks. 'ADMIN' - any.
+                    Update task by its ID can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can update only self tasks. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long taskId,
@@ -78,8 +79,8 @@ public class TaskController {
     @Operation(
             summary = "Delete task",
             description = """
-                    Delete task by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    delete only self tasks. 'ADMIN' - any.
+                    Delete task by its ID can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can delete only self tasks. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {

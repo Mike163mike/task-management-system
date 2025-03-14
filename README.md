@@ -74,3 +74,11 @@ IntelliJ IDEA supports working with Docker Compose through the built-in Docker p
 ### The application uses technology Swagger (Open API) for documentation. 
 
 The documentation for endpoints is located at `http://localhost:8080/swagger-ui/index.html`
+
+### You can try the app in Swagger or Postman.
+
+Initially, a user with the ROLE_ADMIN role is created in the database schema. His credentials are as follows
+
+__login: rick_sanchez@gmail.com<br>
+     password: rick_sanchez__
+

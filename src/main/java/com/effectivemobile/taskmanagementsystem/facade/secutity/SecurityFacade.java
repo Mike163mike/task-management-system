@@ -7,4 +7,6 @@ import java.util.Map;
 public interface SecurityFacade {
 
     Map<String, String> login(UserLoginDto userLoginDto);
+
+    Map<String, String> refreshAccessToken(Map<String, String> response);
 }

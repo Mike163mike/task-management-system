@@ -35,8 +35,8 @@ public class CommentController {
     @Operation(
             summary = "Create new comment",
             description = """
-                    A new comment can be created by users with roles 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE'
-                    can create comments only for their own tasks. "ADMIN" - for anyone.
+                    A new comment can be created by users with roles 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can create comments only for their own tasks. "ROLE_ADMIN" - for anyone.
                     """
     )
     public ResponseEntity<CommentResponseDto> createComment(@RequestBody @Valid CommentCreateDto commentCreateDto) {
@@ -50,8 +50,8 @@ public class CommentController {
             description = """
                     Get all comments related to a specific task by its ID. The endpoint returns a paginated list of
                     comments. You can specify the page parameters, with the default being to start on the 0th page with
-                    20 items per page. User with role 'ASSIGNEE' can get comments only for their own tasks. 'ADMIN'
-                    - any.
+                    20 items per page. User with role 'ROLE_ASSIGNEE' can get comments only for their own tasks.
+                    'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<Page<CommentResponseDto>> getAllCommentsByTask(@PathVariable Long taskId,
@@ -65,8 +65,8 @@ public class CommentController {
     @Operation(
             summary = "Update comment",
             description = """
-                    Update comment by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    update comments only for their own tasks. 'ADMIN' - any.
+                    Update comment by its ID can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can update comments only for their own tasks. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId,
@@ -79,8 +79,8 @@ public class CommentController {
     @Operation(
             summary = "Delete comment",
             description = """
-                    Delete comment by its ID can users with role 'ASSIGNEE' and 'ADMIN'. User with role 'ASSIGNEE' can
-                    delete commit only for their own tasks. 'ADMIN' - any.
+                    Delete comment by its ID can users with role 'ROLE_ASSIGNEE' and 'ROLE_ADMIN'. User with role
+                    'ROLE_ASSIGNEE' can delete commit only for their own tasks. 'ROLE_ADMIN' - any.
                     """
     )
     public ResponseEntity<Void> deleteCommit(@PathVariable Long commentId) {
