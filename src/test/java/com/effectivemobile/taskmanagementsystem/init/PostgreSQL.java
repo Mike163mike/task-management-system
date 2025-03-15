@@ -10,7 +10,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @UtilityClass
 public class PostgreSQL {
 
-    public static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:17");
+    public static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:17")
+            .withDatabaseName("test_db");
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

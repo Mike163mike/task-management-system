@@ -82,3 +82,9 @@ Initially, a user with the ROLE_ADMIN role is created in the database schema. Hi
 __login: rick_sanchez@gmail.com<br>
      password: rick_sanchez__
 
+### Testing the app
+
+Testing the application should be done without running it using Docker Compose. You can start testing by    
+running 'Tests in effectivemobile' or from the Maven Lifecycle.
+ 
+
