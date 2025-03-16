@@ -8,5 +8,5 @@ public interface SecurityFacade {
 
     Map<String, String> login(UserLoginDto userLoginDto);
 
-    Map<String, String> refreshAccessToken(Map<String, String> response);
+    Map<String, String> refreshAccessToken(Map<String, String> request);
 }

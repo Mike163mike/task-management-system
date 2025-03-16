@@ -6,5 +6,5 @@ public interface SecurityService {
 
     Map<String, String> authenticateAndGenerateTokens(String email, String password);
 
-    Map<String, String> refreshAccessToken(Map<String, String> response);
+    Map<String, String> refreshAccessToken(Map<String, String> request);
 }

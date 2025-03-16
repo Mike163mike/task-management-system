@@ -20,7 +20,7 @@ public class SecurityFacadeImpl implements SecurityFacade {
     }
 
     @Override
-    public Map<String, String> refreshAccessToken(Map<String, String> response) {
-        return securityService.refreshAccessToken(response);
+    public Map<String, String> refreshAccessToken(Map<String, String> request) {
+        return securityService.refreshAccessToken(request);
     }
 }

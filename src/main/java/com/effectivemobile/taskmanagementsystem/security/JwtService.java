@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,15 +21,10 @@ public class JwtService {
     private String secretKey;
 
     @Value("${jwt.access_token_expiration}")
-    private long accessTokenExpiration;
+    private Long accessTokenExpiration;
 
     @Value("${jwt.refresh_token_expiration}")
-    private long refreshTokenExpiration;
-
-//    public String generateToken(UserDetails userDetails) {
-//        Map<String, Object> claims = new HashMap<>();
-//        return createToken(claims, userDetails.getUsername());
-//    }
+    private Long refreshTokenExpiration;
 
     public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -36,12 +33,8 @@ public class JwtService {
 
     public String generateRefreshToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername(), refreshTokenExpiration);
+        return createToken(claims, userDetails.getUsername() + System.nanoTime(), refreshTokenExpiration);
     }
-
-//    public boolean validateToken(String token, UserDetails userDetails) {
-//        return extractUsername(token).equals(userDetails.getUsername());
-//    }
 
     public boolean validateToken(String token, UserDetails userDetails) {
         return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
@@ -54,6 +47,10 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public OffsetDateTime getRefreshTokenExpiry() {
+        return OffsetDateTime.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS);
     }
 
     public boolean isTokenExpired(String token) {
