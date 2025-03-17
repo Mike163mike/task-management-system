@@ -9,7 +9,6 @@ import com.effectivemobile.taskmanagementsystem.security.JwtService;
 import com.effectivemobile.taskmanagementsystem.security.UserDetailsAdapter;
 import com.effectivemobile.taskmanagementsystem.service.security.SecurityService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,12 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityServiceImpl implements SecurityService {
 
     private final AuthenticationManager authenticationManager;
@@ -39,52 +36,25 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     @Transactional
     public Map<String, String> authenticateAndGenerateTokens(String email, String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,
-                password));
-
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        User user = getUserByEmail(email);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("User %s not found" .formatted(email), HttpStatus.NOT_FOUND,
-                        this.getClass(), "authenticateAndGenerateTokens"));
-
-        String accessToken = jwtService.generateAccessToken(userDetails);
-        String refreshToken = jwtService.generateRefreshToken(userDetails);
-
-        RefreshToken savedRefreshToken = RefreshToken.builder()
-                .token(refreshToken)
-                .expiryDate(jwtService.getRefreshTokenExpiry())
-                .user(user)
-                .build();
-
-        if (refreshTokenRepository.existsByUser(user)) {
-            refreshTokenRepository.deleteByUser(user);
-        }
-
-        refreshTokenRepository.save(savedRefreshToken);
-
-        return Map.of(
-                "accessToken", accessToken,
-                "refreshToken", refreshToken
-        );
+        return generateAndSaveTokens(user, userDetails);
     }
 
     @Override
     @Transactional
     public Map<String, String> refreshAccessToken(Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
-
         if (refreshToken == null) {
             throw new CustomException("Refresh token is required", HttpStatus.BAD_REQUEST, this.getClass(),
                     "refreshAccessToken");
         }
-
-        List<RefreshToken> tokens = refreshTokenRepository.findAll();
-        log.info("Stored tokens in DB: ============>>>>>>>>>>{}", tokens);
-        log.info("Trying to find refresh token: ==========={}", refreshToken);
-
 
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new CustomException("Invalid refresh token", HttpStatus.UNAUTHORIZED, this.getClass(),
@@ -96,41 +66,27 @@ public class SecurityServiceImpl implements SecurityService {
                     this.getClass(), "refreshAccessToken");
         }
 
-        User user = storedToken.getUser();
+        User user = getUserByEmail(storedToken.getUser().getEmail());
+        return generateAndSaveTokens(user, new UserDetailsAdapter(user));
+    }
 
-        User savedUser = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new CustomException("User %s not found" .formatted(user.getEmail()),
-                        HttpStatus.NOT_FOUND, this.getClass(), "refreshAccessToken"));
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("User %s not found" .formatted(email),
+                        HttpStatus.NOT_FOUND, this.getClass(), "getUserByEmail"));
+    }
 
-        String newAccessToken = jwtService.generateAccessToken(new UserDetailsAdapter(savedUser));
+    private Map<String, String> generateAndSaveTokens(User user, UserDetails userDetails) {
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
 
-
-        if (storedToken.getExpiryDate().isAfter(OffsetDateTime.now())) {
-            return Map.of(
-                    "accessToken", newAccessToken,
-                    "refreshToken", refreshToken
-            );
-        }
-
-        String newRefreshToken = jwtService.generateRefreshToken(new UserDetailsAdapter(savedUser));
-
-        if (refreshTokenRepository.existsByToken(newRefreshToken)) {
-            throw new CustomException("Token already exists", HttpStatus.BAD_REQUEST, this.getClass(),
-                    "refreshAccessToken");
-        }
-
-        refreshTokenRepository.delete(storedToken);
-
-//        refreshTokenRepository.deleteByToken(refreshToken);
-
-        RefreshToken newRefreshTokenEntity = RefreshToken.builder()
-                .token(newRefreshToken)
+        refreshTokenRepository.deleteByUser(user);
+        refreshTokenRepository.save(RefreshToken.builder()
+                .token(refreshToken)
                 .expiryDate(jwtService.getRefreshTokenExpiry())
-                .user(savedUser)
-                .build();
+                .user(user)
+                .build());
 
-        refreshTokenRepository.save(newRefreshTokenEntity);
-
-        return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
+        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
     }
 }

@@ -29,7 +29,6 @@ public class CommentController {
 
     private final CommentFacade commentFacade;
 
-
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")
     @Operation(
@@ -58,7 +57,6 @@ public class CommentController {
                                                                          @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(commentFacade.getAllCommentsByTask(taskId, pageable));
     }
-
 
     @PatchMapping("/update/{commentId}")
     @PreAuthorize("hasAnyRole('ROLE_ASSIGNEE', 'ROLE_ADMIN')")

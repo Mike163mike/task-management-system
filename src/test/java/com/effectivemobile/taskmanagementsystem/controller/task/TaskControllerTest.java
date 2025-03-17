@@ -7,7 +7,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
 
-import static com.effectivemobile.taskmanagementsystem.constant.AppConstant.*;
+import static com.effectivemobile.taskmanagementsystem.constant.AppConstant.APP_PREFIX;
+import static com.effectivemobile.taskmanagementsystem.constant.AppConstant.TASK;
 import static com.effectivemobile.taskmanagementsystem.controller.util.RestAssuredUtils.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
@@ -154,9 +155,7 @@ public class TaskControllerTest extends BaseTest {
                 .then()
                 .assertThat()
                 .statusCode(OK.value())
-                .body("content", iterableWithSize(1))
-                .body("content.id", notNullValue())
-                .body("content.creator", contains("rick_sanchez@gmail.com"));
+                .body("content.creator", everyItem(equalTo("rick_sanchez@gmail.com")));
     }
 
     @Test

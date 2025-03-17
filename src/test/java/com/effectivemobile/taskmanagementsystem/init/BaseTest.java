@@ -1,7 +1,5 @@
 package com.effectivemobile.taskmanagementsystem.init;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +14,6 @@ import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfVali
 @ExtendWith({SpringExtension.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = PostgreSQL.Initializer.class)
-@Slf4j
 public abstract class BaseTest {
 
     /**
@@ -33,13 +30,7 @@ public abstract class BaseTest {
 
     @BeforeAll
     static void initTestContainer() {
-        PostgreSQL.container.start();
         enableLoggingOfRequestAndResponseIfValidationFails();
-    }
-
-    @AfterAll
-    static void stopContainer() {
-        PostgreSQL.container.stop();
     }
 
     @BeforeEach

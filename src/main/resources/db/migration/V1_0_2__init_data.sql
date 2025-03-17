@@ -17,5 +17,3 @@ ON CONFLICT (user_id, role_id) DO NOTHING;
 ALTER SEQUENCE public.users_id_seq RESTART WITH 2;
 
 ALTER SEQUENCE public.roles_id_seq RESTART WITH 4;
-
--- SELECT pg_get_serial_sequence('users', 'id');

@@ -10,14 +10,14 @@ spring:
 
   jpa:
     open-in-view: true
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
     properties:
       format_sql: true
       highlight_sql: true
       hibernate:
-        use_sql_comments: true
+        use_sql_comments: false
 
   flyway:
     enabled: true
@@ -28,7 +28,7 @@ spring:
 
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: error
 
 app:
   name: Task management system

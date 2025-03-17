@@ -18,8 +18,6 @@ public class SecurityControllerTest extends BaseTest {
 
     private static Long testUserId;
 
-    private static String refreshToken;
-
     @BeforeEach
     @Override
     public void setUp() {
@@ -58,7 +56,7 @@ public class SecurityControllerTest extends BaseTest {
     @DirtiesContext
     void givenCreatedTestUser_whenTryToGetRefreshToken_thenCheckIfItIsObtained() {
         //register tokens for new user
-        refreshToken = RestAssured
+        String refreshToken = RestAssured
                 .given()
                 .contentType(ContentType.JSON)
                 .body("""

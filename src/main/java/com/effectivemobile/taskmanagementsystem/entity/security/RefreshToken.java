@@ -1,9 +1,9 @@
 package com.effectivemobile.taskmanagementsystem.entity.security;
 
+import com.effectivemobile.taskmanagementsystem.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import com.effectivemobile.taskmanagementsystem.entity.user.User;
 
 import java.time.OffsetDateTime;
 

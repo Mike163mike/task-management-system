@@ -35,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public Task updateTask(Long taskId, Task updatedTask) {
         Task oldTask = taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB" .formatted(taskId),
                         this.getClass(), "updateTask"));
 
         validateTaskAccess(oldTask);
@@ -70,12 +70,11 @@ public class TaskServiceImpl implements TaskService {
         return oldTask;
     }
 
-
     @Override
     @Transactional
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB" .formatted(taskId),
                         this.getClass(), "deleteTask"));
 
         validateTaskAccess(task);

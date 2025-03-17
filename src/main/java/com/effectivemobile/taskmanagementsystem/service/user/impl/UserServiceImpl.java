@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User oldUser = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User with ID %s not found in DB".formatted(userId),
+                .orElseThrow(() -> new CustomException("User with ID %s not found in DB" .formatted(userId),
                         this.getClass(), "updateUser"));
 
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
@@ -114,11 +114,4 @@ public class UserServiceImpl implements UserService {
                 .anyMatch(roleName -> roleName.equals(RoleEnum.ROLE_ADMIN));
     }
 
-    @Override
-    public boolean isAdminOrAssignee(User user) {
-        return user.getRoles().stream()
-                .map(Role::getName)
-                .anyMatch(roleName -> roleName.equals(RoleEnum.ROLE_ADMIN)
-                        || roleName.equals(RoleEnum.ROLE_ASSIGNEE));
-    }
 }

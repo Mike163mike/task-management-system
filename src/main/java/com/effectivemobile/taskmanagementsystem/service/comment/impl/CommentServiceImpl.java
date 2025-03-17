@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(Comment comment) {
         Long taskId = comment.getTask().getId();
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB" .formatted(taskId),
                         this.getClass(), "createComment"));
 
         taskService.validateTaskAccess(task);
@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<Comment> getAllCommentsByTask(Long taskId, Pageable pageable) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB".formatted(taskId),
+                .orElseThrow(() -> new CustomException("Task with ID %s not found in DB" .formatted(taskId),
                         this.getClass(), "getAllCommentsByTask"));
 
         taskService.validateTaskAccess(task);
@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment updateComment(Long commentId, Comment updatedComment) {
         Comment commentToUpdate = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB".formatted(commentId),
+                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB" .formatted(commentId),
                         this.getClass(), "updateComment"));
 
         validateCommentAccess(commentToUpdate);
@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB".formatted(commentId),
+                .orElseThrow(() -> new CustomException("Comment with ID %s not found in DB" .formatted(commentId),
                         this.getClass(), "deleteComment"));
 
         validateCommentAccess(comment);

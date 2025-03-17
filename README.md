@@ -21,21 +21,23 @@
 
 ### Getting started
 
-The application can be launched via Docker Compose both from the terminal and from IntelliJ IDEA.<br> Here are recommendations for both options:
+The application can be launched via Docker Compose both from the terminal and from IntelliJ IDEA.<br> Here are
+recommendations for both options:
 
 ### Launch via the terminal
 
 Open a terminal and navigate to the directory where the docker-compose.yml file is located.
 
-Check the correctness of the file (if necessary, run the `docker–compose config` command to see the final configuration).
+Check the correctness of the file (if necessary, run the `docker–compose config` command to see the final
+configuration).
 
-Run the containers with the command: `docker-compose up`. <br>  
+Run the containers with the command: `docker-compose up`. <br>
 
 If you want the terminal not to be blocked, run in the background: `docker-compose up -d`.
 
 Checking the status of containers: `docker-compose ps`. This will show which containers are running and their status.
 
-Stopping containers: <br> 
+Stopping containers: <br>
 
 To stop containers, run: `docker-compose down`.
 
@@ -47,7 +49,8 @@ IntelliJ IDEA supports working with Docker Compose through the built-in Docker p
 
 1. Make sure that the Docker plugin is enabled:
 
-* Go to `File → Settings (Preferences) → Plugins` and find the Docker plugin. If it is not enabled, activate it and restart IDEA.
+* Go to `File → Settings (Preferences) → Plugins` and find the Docker plugin. If it is not enabled, activate it and
+  restart IDEA.
 
 2. Configure the Docker Connection:
 
@@ -56,7 +59,7 @@ IntelliJ IDEA supports working with Docker Compose through the built-in Docker p
 
 3. Create a startup configuration for Docker Compose:
 
-* Open `Run → Edit Configurations...`. 
+* Open `Run → Edit Configurations...`.
 * Click on the "+" button and select Docker Compose.
 * Specify the configuration name.
 * In the File(s) field, select your `docker-compose.yml`.
@@ -71,7 +74,7 @@ IntelliJ IDEA supports working with Docker Compose through the built-in Docker p
 
 * Stop the configuration via IDEA by clicking on the Stop button (red square).
 
-### The application uses technology Swagger (Open API) for documentation. 
+### The application uses technology Swagger (Open API) for documentation.
 
 The documentation for endpoints is located at `http://localhost:8080/swagger-ui/index.html`
 
@@ -80,7 +83,7 @@ The documentation for endpoints is located at `http://localhost:8080/swagger-ui/
 Initially, a user with the ROLE_ADMIN role is created in the database schema. His credentials are as follows
 
 __login: rick_sanchez@gmail.com<br>
-     password: rick_sanchez__
+password: rick_sanchez__
 
 ### Testing the app
 

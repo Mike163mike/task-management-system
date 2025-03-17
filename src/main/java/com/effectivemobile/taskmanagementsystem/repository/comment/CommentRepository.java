@@ -12,6 +12,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findAllByTaskId(Long taskId, Pageable pageable);
 
     boolean existsByTextAndIdNot(String text, Long id);
-
-    boolean existsByText(String text);
 }

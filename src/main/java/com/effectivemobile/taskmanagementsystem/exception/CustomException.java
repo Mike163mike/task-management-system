@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-    public class CustomException extends RuntimeException {
+public class CustomException extends RuntimeException {
 
     private HttpStatus responseStatus;
 
@@ -22,14 +22,6 @@ import org.springframework.http.HttpStatus;
 
     public CustomException(String message, HttpStatus responseStatus, Class<?> sourceClazz, String sourceMethod) {
         super(message);
-        this.responseStatus = responseStatus;
-        this.sourceClazz = sourceClazz != null ? sourceClazz.getSimpleName() : "null";
-        this.sourceMethod = sourceMethod;
-    }
-
-    public CustomException(String message, HttpStatus responseStatus, Class<?> sourceClazz, String sourceMethod,
-                           Throwable e) {
-        super(message, e);
         this.responseStatus = responseStatus;
         this.sourceClazz = sourceClazz != null ? sourceClazz.getSimpleName() : "null";
         this.sourceMethod = sourceMethod;

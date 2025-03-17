@@ -19,6 +19,4 @@ public interface UserService {
     User getCurrentUser();
 
     boolean isAdmin(User user);
-
-    boolean isAdminOrAssignee(User user);
 }

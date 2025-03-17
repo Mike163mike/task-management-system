@@ -13,6 +13,10 @@ public class PostgreSQL {
     public static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:17")
             .withDatabaseName("test_db");
 
+    static {
+        container.start();
+    }
+
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
