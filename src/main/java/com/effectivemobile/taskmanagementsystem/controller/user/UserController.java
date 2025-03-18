@@ -1,6 +1,7 @@
 package com.effectivemobile.taskmanagementsystem.controller.user;
 
 import com.effectivemobile.taskmanagementsystem.constant.AppConstant;
+import com.effectivemobile.taskmanagementsystem.dto.user.SetRoleDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserUpdateDto;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(
             summary = "Get page of users",
             description = """
@@ -64,6 +65,20 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,
                                                       @RequestBody @Valid UserUpdateDto userUpdateDto) {
         return ResponseEntity.ok(userFacade.updateUser(userId, userUpdateDto));
+    }
+
+    @PatchMapping("/set-role")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Operation(
+            summary = "Set role to user",
+            description = """
+                    Only user with the 'ROLE_ADMIN' role can set a role for a user by their email. Valid values for role's
+                    name are 'ROLE_USER', 'ROLE_ASSIGNEE', 'ROLE_ADMIN'.
+                    """
+    )
+    public ResponseEntity<Void> setRoleToUser(@RequestBody @Valid SetRoleDto setRoleDto) {
+        userFacade.setRoleToUser(setRoleDto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{userId}")

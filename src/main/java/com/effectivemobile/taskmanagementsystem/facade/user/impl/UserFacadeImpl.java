@@ -1,10 +1,12 @@
 package com.effectivemobile.taskmanagementsystem.facade.user.impl;
 
+import com.effectivemobile.taskmanagementsystem.dto.user.SetRoleDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserCreationDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserResponseDto;
 import com.effectivemobile.taskmanagementsystem.dto.user.UserUpdateDto;
 import com.effectivemobile.taskmanagementsystem.facade.user.UserFacade;
 import com.effectivemobile.taskmanagementsystem.mapper.user.UserMapper;
+import com.effectivemobile.taskmanagementsystem.security.RoleEnum;
 import com.effectivemobile.taskmanagementsystem.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,12 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public Page<UserResponseDto> getAllUsers(Pageable pageable) {
         return userMapper.toPageResponseDto(userService.getAllUsers(pageable));
+    }
+
+    @Override
+    public void setRoleToUser(SetRoleDto setRoleDto) {
+        RoleEnum roleEnum = RoleEnum.valueOf(setRoleDto.getRole());
+        userService.setRoleToUser(setRoleDto.getEmail(), roleEnum);
     }
 
     @Override

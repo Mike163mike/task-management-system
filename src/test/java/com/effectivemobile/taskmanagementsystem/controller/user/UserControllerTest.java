@@ -120,4 +120,64 @@ public class UserControllerTest extends BaseTest {
                 .statusCode(OK.value())
                 .body("content.id", not(hasItem(Math.toIntExact(testUserId))));
     }
+
+    @Test
+    @Order(5)
+    void givenUserWithRoleUser_whenUserWithRoleAdminAddHimRoleAssignee_thenCheckIfUserGotIt() {
+        //check that user with role ROLE_USER can't get access to resource for ROLE_ASSIGNEE and ROLE_ADMIN only
+        RestAssured
+                .given()
+                .spec(getAccessSpecification(getTestUserAccessToken()))
+                .contentType(ContentType.JSON)
+                .pathParam("userId", testUserId)
+                .body("""
+                        {
+                            "email": "bender_rodriguez@gmail.com",
+                            "password": "bender_rodriguez"
+                        
+                        }""")
+                .when()
+                .patch(APP_PREFIX + USER + "/update/{userId}")
+                .then()
+                .assertThat()
+                .statusCode(INTERNAL_SERVER_ERROR.value())
+                .body("message", is("Access Denied"));
+
+        //add test user role 'ROLE_ASSIGNEE'
+        RestAssured
+                .given()
+                .spec(getAccessSpecification(getAdminAccessToken()))
+                .contentType(ContentType.JSON)
+                .body("""
+                        {
+                            "email": "morty_smith@gmail.com",
+                            "role": "ROLE_ASSIGNEE"
+                        
+                        }""")
+                .when()
+                .patch(APP_PREFIX + USER + "/set-role")
+                .then()
+                .assertThat()
+                .statusCode(OK.value());
+
+        //one more time try to access the resource 'ROLE_ASSIGNEE' only by test user
+        RestAssured
+                .given()
+                .spec(getAccessSpecification(getTestUserAccessToken()))
+                .contentType(ContentType.JSON)
+                .pathParam("userId", testUserId)
+                .body("""
+                        {
+                            "email": "bender_rodriguez@gmail.com",
+                            "password": "bender_rodriguez"
+                        
+                        }""")
+                .when()
+                .patch(APP_PREFIX + USER + "/update/{userId}")
+                .then()
+                .assertThat()
+                .statusCode(OK.value())
+                .body("id", notNullValue())
+                .body("email", is("bender_rodriguez@gmail.com"));
+    }
 }

@@ -114,4 +114,28 @@ public class UserServiceImpl implements UserService {
                 .anyMatch(roleName -> roleName.equals(RoleEnum.ROLE_ADMIN));
     }
 
+    @Override
+    @Transactional
+    public void setRoleToUser(String email, RoleEnum roleEnum) {
+        if (!isAdmin(getCurrentUser())) {
+            throw new CustomException("Only user with the role 'ROLE_ADMIN' are able to set the role of other users.",
+                    HttpStatus.FORBIDDEN, this.getClass(), "setRoleToUser");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("User with email %s not found" .formatted(email),
+                        HttpStatus.NOT_FOUND, this.getClass(), "setRoleToUser"));
+
+        Role roleInDB = roleRepository.findByName(roleEnum)
+                .orElseThrow(() -> new CustomException("Role %s not found" .formatted(roleEnum.name()),
+                        HttpStatus.NOT_FOUND, this.getClass(), "setRoleToUser"));
+
+        if (user.getRoles().contains(roleInDB)) {
+            throw new CustomException("User already has role %s" .formatted(roleEnum.name()), HttpStatus.CONFLICT,
+                    this.getClass(), "setRoleToUser");
+        }
+
+        user.getRoles().add(roleInDB);
+        userRepository.save(user);
+    }
 }
